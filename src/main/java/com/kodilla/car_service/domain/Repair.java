@@ -1,12 +1,12 @@
 package com.kodilla.car_service.domain;
 
 import com.kodilla.car_service.repairStatus.RepairStatus;
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -53,6 +53,30 @@ public class Repair {
         this.admissionDate = LocalDate.now();
         this.car = car;
         this.serviceTechnician = serviceTechnician;
+        this.cost = cost;
+    }
+
+    public void setRepairStatus(final RepairStatus repairStatus) {
+        this.repairStatus = repairStatus;
+    }
+
+    public void setReleaseDate(final LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setRepairDescription(final String repairDescription) {
+        this.repairDescription = repairDescription;
+    }
+
+    public void setRepairTimeInManHours(final BigDecimal repairTimeInManHours) {
+        this.repairTimeInManHours = repairTimeInManHours;
+    }
+
+    public void setServiceTechnician(final ServiceTechnician serviceTechnician) {
+        this.serviceTechnician = serviceTechnician;
+    }
+
+    public void setCost(final Cost cost) {
         this.cost = cost;
     }
 }

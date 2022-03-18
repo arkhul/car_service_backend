@@ -14,7 +14,7 @@ public class ServiceTechnicianService {
 
     private final ServiceTechnicianRepository serviceTechnicianRepository;
 
-    public List<ServiceTechnician> getServiceTechnician() {
+    public List<ServiceTechnician> getServiceTechnicians() {
         return serviceTechnicianRepository.findAll();
     }
 

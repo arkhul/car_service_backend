@@ -25,4 +25,10 @@ public class GlobalHttpErrorHandler {
         return new ResponseEntity<>("Service technician with given id doesn't exist",
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RepairNotFoundException.class)
+    public ResponseEntity<Object> handleRepairNotFoundException() {
+        return new ResponseEntity<>("Repair with given id doesn't exist",
+                HttpStatus.BAD_REQUEST);
+    }
 }

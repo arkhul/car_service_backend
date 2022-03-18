@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,6 +16,10 @@ public class RepairService {
 
     public List<Repair> getRepairs() {
         return repairRepository.findAll();
+    }
+
+    public Optional<Repair> getRepair(final Long repairId) {
+        return repairRepository.findById(repairId);
     }
 
     public Repair saveRepair(final Repair repair) {

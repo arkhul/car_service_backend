@@ -23,32 +23,32 @@ public class ServiceTechnicianController {
     @Autowired
     private ServiceTechnicianService serviceTechnicianService;
 
-    @RequestMapping(method = RequestMethod.GET, value = "/technician")
+    @RequestMapping(method = RequestMethod.GET, value = "/technicians")
     public List<ServiceTechnicianDto> getServiceTechnicians() {
         return serviceTechnicianMapper.mapToServiceTechnicianDtoList(
-                serviceTechnicianService.getServiceTechnician());
+                serviceTechnicianService.getServiceTechnicians());
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/technician/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/technicians/{id}")
     public ServiceTechnicianDto getServiceTechnician(@PathVariable Long id) throws Exception {
         return serviceTechnicianMapper.mapToServiceTechnicianDto(serviceTechnicianService.getServiceTechnician(id)
                 .orElseThrow(ServiceTechnicianNotFoundException::new));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/technician", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, value = "/technicians", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void createServiceTechnician(@RequestBody ServiceTechnicianDto serviceTechnicianDto) {
         serviceTechnicianService.saveServiceTechnician(serviceTechnicianMapper.mapToServiceTechnician(serviceTechnicianDto));
     }
 
-    @RequestMapping(method = RequestMethod.PUT, value = "/technician")
+    @RequestMapping(method = RequestMethod.PUT, value = "/technicians")
     public ServiceTechnicianDto updateServiceTechnician(@RequestBody ServiceTechnicianDto serviceTechnicianDto) {
         return serviceTechnicianMapper.mapToServiceTechnicianDto(serviceTechnicianService
                 .saveServiceTechnician(serviceTechnicianMapper.mapToServiceTechnician(serviceTechnicianDto)));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/technician/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/technicians/{id}")
     public void deleteServiceTechnician(@PathVariable Long id) throws ServiceTechnicianNotFoundException {
-        List<Long> theList = serviceTechnicianService.getServiceTechnician().stream()
+        List<Long> theList = serviceTechnicianService.getServiceTechnicians().stream()
                 .map(ServiceTechnician::getId)
                 .collect(Collectors.toList());
         if (!theList.contains(id)) {

@@ -25,11 +25,6 @@ public class RepairMapper {
         return new Repair(
                 repairDto.getId(),
                 repairDto.getDamageDescription(),
-                //        RepairStatus.valueOf(repairDto.getRepairStatus()),
-                //        repairDto.getAdmissionDate(),
-                //        repairDto.getReleaseDate(),
-                //        repairDto.getRepairDescription(),
-                //        repairDto.getRepairTimeInManHours(),
                 carRepository.findByVin(repairDto.getCar()),
                 serviceTechnicianRepository.findByName(repairDto.getServiceTechnician()),
                 costRepository.findByTotalCost(repairDto.getCost())

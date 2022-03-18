@@ -25,7 +25,7 @@ public class ClientController {
     private ClientService clientService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/clients")
-    public List<ClientDto> getClients() {
+    public List<ClientDto> getClients()  {
         return clientMapper.mapToClientDtoList(clientService.getClients());
     }
 

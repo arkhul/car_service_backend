@@ -17,7 +17,6 @@ public class Cost {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long id;
 
     @NotNull
@@ -28,4 +27,10 @@ public class Cost {
 
     @NotNull
     private BigDecimal totalCost;
+
+    public Cost(final BigDecimal partsCost, final BigDecimal labourCost, final BigDecimal totalCost) {
+        this.partsCost = partsCost;
+        this.labourCost = labourCost;
+        this.totalCost = totalCost;
+    }
 }

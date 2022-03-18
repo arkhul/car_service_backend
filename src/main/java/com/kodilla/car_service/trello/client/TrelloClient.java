@@ -67,6 +67,31 @@ public class TrelloClient {
         restTemplate.put(url, null);
     }
 
+    public void updateCardAfterEndRepair(String cardId, String email, RepairDto repairDto) {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
+                "/cards/" + cardId)
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .queryParam("name", repairDto.getCar())
+                .queryParam("desc", repairDto.getDamageDescription())
+                .queryParam("pos", "top")
+                .queryParam("idList", "622f3270e0d1a952c91794ae")
+                .queryParam("id", cardId)
+                .build()
+                .encode()
+                .toUri();
+        simpleEmailService.sendMail(
+                new Mail(
+                        email,
+                        "Repair status changed",
+                        "Dear customer, " +
+                                "we changed the repair status of your car (vin: " +
+                                repairDto.getCar() + "). The current status is: " +
+                                repairDto.getRepairStatus() + ". Best regards."
+                ));
+        restTemplate.put(url, null);
+    }
+
     public List<TrelloCardDto> getCardDataList() {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
                 "/boards/" + trelloConfig.getTrelloBoard() + "/cards")

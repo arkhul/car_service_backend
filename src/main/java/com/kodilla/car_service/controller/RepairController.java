@@ -1,11 +1,16 @@
 package com.kodilla.car_service.controller;
 
+import com.kodilla.car_service.domain.Cost;
 import com.kodilla.car_service.domain.Repair;
 import com.kodilla.car_service.domain.ServiceTechnician;
+import com.kodilla.car_service.dto.CostDto;
 import com.kodilla.car_service.dto.RepairDto;
+import com.kodilla.car_service.dto.ServiceTechnicianDto;
 import com.kodilla.car_service.exception.RepairNotFoundException;
+import com.kodilla.car_service.mapper.CostMapper;
 import com.kodilla.car_service.mapper.RepairMapper;
 import com.kodilla.car_service.repairStatus.RepairStatus;
+import com.kodilla.car_service.service.CostService;
 import com.kodilla.car_service.service.RepairService;
 import com.kodilla.car_service.service.ServiceTechnicianService;
 import com.kodilla.car_service.trello.client.TrelloClient;
@@ -13,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +36,12 @@ public class RepairController {
 
     @Autowired
     private TrelloClient trelloClient;
+
+    @Autowired
+    private CostService costService;
+
+    @Autowired
+    private CostMapper costMapper;
 
     @Autowired
     private ServiceTechnicianService serviceTechnicianService;
@@ -59,6 +72,30 @@ public class RepairController {
                 .collect(Collectors.toList());
         String cardId = cardIdList.get(0);
         trelloClient.updateCardAfterStartRepair(cardId, email, repairDto);
+        return repairMapper.mapToRepairDto(repairService.saveRepair(repair));
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/repairs/end/{repairId}/{repairDesc}/{repairTime}/{partsCost}")
+    public RepairDto endRepair(@PathVariable Long repairId, @PathVariable String repairDesc, @PathVariable BigDecimal repairTime,
+                               @PathVariable BigDecimal partsCost) throws RepairNotFoundException {
+        Repair repair = repairService.getRepair(repairId).orElseThrow(RepairNotFoundException::new);
+        BigDecimal labour_cost = repair.getServiceTechnician().getManHourRate().multiply(repairTime);
+        Cost cost = new Cost(partsCost, labour_cost, partsCost.add(labour_cost));
+        costService.saveCost(cost);
+        repair.setRepairStatus(RepairStatus.DONE);
+        repair.setReleaseDate(LocalDate.now());
+        repair.setRepairDescription(repairDesc);
+        repair.setRepairTimeInManHours(repairTime);
+        repair.setCost(cost);
+        String email = repair.getCar().getClient().getEmail();
+        RepairDto repairDto = repairMapper.mapToRepairDto(repair);
+        String vin = repair.getCar().getVin();
+        List<String> cardIdList = trelloClient.getCardDataList().stream()
+                .filter(c -> c.getName().equals(vin))
+                .map(c -> c.getId())
+                .collect(Collectors.toList());
+        String cardId = cardIdList.get(0);
+        trelloClient.updateCardAfterEndRepair(cardId, email, repairDto);
         return repairMapper.mapToRepairDto(repairService.saveRepair(repair));
     }
 }

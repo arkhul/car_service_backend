@@ -1,8 +1,10 @@
 package com.kodilla.car_service.trello.client;
 
+import com.kodilla.car_service.domain.Mail;
 import com.kodilla.car_service.dto.RepairDto;
 import com.kodilla.car_service.dto.TrelloCardDto;
 import com.kodilla.car_service.trello.config.TrelloConfig;
+import com.kodilla.car_service.trello.service.SimpleEmailService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +22,8 @@ public class TrelloClient {
 
     private final RestTemplate restTemplate;
 
+    private final SimpleEmailService simpleEmailService;
+
     private final TrelloConfig trelloConfig;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
@@ -35,11 +39,10 @@ public class TrelloClient {
                 .build()
                 .encode()
                 .toUri();
-
         return restTemplate.postForObject(url, null, TrelloCardDto.class);
     }
 
-    public void updateCard(String cardId, RepairDto repairDto) {
+    public void updateCardAfterStartRepair(String cardId, String email, RepairDto repairDto) {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
                 "/cards/" + cardId)
                 .queryParam("key", trelloConfig.getTrelloAppKey())
@@ -52,7 +55,15 @@ public class TrelloClient {
                 .build()
                 .encode()
                 .toUri();
-
+        simpleEmailService.sendMail(
+                new Mail(
+                        email,
+                        "Repair status changed",
+                        "Dear customer, " +
+                                "we changed the repair status of your car (vin: " +
+                                repairDto.getCar() + "). The current status is: " +
+                                repairDto.getRepairStatus() + ". Best regards."
+                ));
         restTemplate.put(url, null);
     }
 

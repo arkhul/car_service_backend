@@ -50,6 +50,7 @@ public class RepairController {
         repair.setRepairStatus(RepairStatus.IN_PROGRESS);
         ServiceTechnician serviceTechnician = serviceTechnicianService.findByName(technicianName);
         repair.setServiceTechnician(serviceTechnician);
+        String email = repair.getCar().getClient().getEmail();
         RepairDto repairDto = repairMapper.mapToRepairDto(repair);
         String vin = repair.getCar().getVin();
         List<String> cardIdList = trelloClient.getCardDataList().stream()
@@ -57,7 +58,7 @@ public class RepairController {
                 .map(c -> c.getId())
                 .collect(Collectors.toList());
         String cardId = cardIdList.get(0);
-        trelloClient.updateCard(cardId, repairDto);
+        trelloClient.updateCardAfterStartRepair(cardId, email, repairDto);
         return repairMapper.mapToRepairDto(repairService.saveRepair(repair));
     }
 }

@@ -31,4 +31,10 @@ public class GlobalHttpErrorHandler {
         return new ResponseEntity<>("Repair with given id doesn't exist",
                 HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(CarNotFoundException.class)
+    public ResponseEntity<Object> handleCarNotFoundException() {
+        return new ResponseEntity<>("Car with given vin doesn't exist",
+                HttpStatus.BAD_REQUEST);
+    }
 }

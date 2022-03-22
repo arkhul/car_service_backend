@@ -5,7 +5,7 @@ import com.kodilla.car_service.dto.ServiceTechnicianDto;
 import com.kodilla.car_service.exception.ServiceTechnicianNotFoundException;
 import com.kodilla.car_service.mapper.ServiceTechnicianMapper;
 import com.kodilla.car_service.service.ServiceTechnicianService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +15,12 @@ import java.util.stream.Collectors;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/v1")
+@RequiredArgsConstructor
 public class ServiceTechnicianController {
 
-    @Autowired
-    private ServiceTechnicianMapper serviceTechnicianMapper;
+    private final ServiceTechnicianMapper serviceTechnicianMapper;
 
-    @Autowired
-    private ServiceTechnicianService serviceTechnicianService;
+    private final ServiceTechnicianService serviceTechnicianService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/technicians")
     public List<ServiceTechnicianDto> getServiceTechnicians() {

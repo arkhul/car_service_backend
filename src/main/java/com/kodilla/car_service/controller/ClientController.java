@@ -6,7 +6,7 @@ import com.kodilla.car_service.exception.ClientFoundInDatabaseException;
 import com.kodilla.car_service.exception.ClientNotFoundException;
 import com.kodilla.car_service.mapper.ClientMapper;
 import com.kodilla.car_service.service.ClientService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,13 +16,12 @@ import java.util.stream.Collectors;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/v1")
+@RequiredArgsConstructor
 public class ClientController {
 
-    @Autowired
-    private ClientMapper clientMapper;
+    private final ClientMapper clientMapper;
 
-    @Autowired
-    private ClientService clientService;
+    private final ClientService clientService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/clients")
     public List<ClientDto> getClients()  {
@@ -36,11 +35,11 @@ public class ClientController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/clients", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createClient(@RequestBody ClientDto clientDto) throws ClientFoundInDatabaseException {
+    public Client createClient(@RequestBody ClientDto clientDto) throws ClientFoundInDatabaseException {
         if (phoneNumbers().contains(clientDto.getPhoneNumber())) {
             throw new ClientFoundInDatabaseException();
         } else {
-            clientService.saveClient(clientMapper.mapToClient(clientDto));
+           return clientService.saveClient(clientMapper.mapToClient(clientDto));
         }
     }
 

@@ -13,4 +13,6 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
 
     @Override
     List<Client> findAll();
+
+    Client findByPhoneNumber(Long phoneNumber);
 }

@@ -43,4 +43,13 @@ public class Car {
             fetch = FetchType.LAZY
     )
     private List<Repair> repairList = new ArrayList<>();
+
+    public Car(final String vin, final String make, final String model, final int year, final String engine, final Client client) {
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.engine = engine;
+        this.client = client;
+    }
 }

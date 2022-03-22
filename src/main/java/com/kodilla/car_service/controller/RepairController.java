@@ -3,18 +3,16 @@ package com.kodilla.car_service.controller;
 import com.kodilla.car_service.domain.Cost;
 import com.kodilla.car_service.domain.Repair;
 import com.kodilla.car_service.domain.ServiceTechnician;
-import com.kodilla.car_service.dto.CostDto;
 import com.kodilla.car_service.dto.RepairDto;
-import com.kodilla.car_service.dto.ServiceTechnicianDto;
+import com.kodilla.car_service.dto.TrelloCardDto;
 import com.kodilla.car_service.exception.RepairNotFoundException;
-import com.kodilla.car_service.mapper.CostMapper;
 import com.kodilla.car_service.mapper.RepairMapper;
 import com.kodilla.car_service.repairStatus.RepairStatus;
 import com.kodilla.car_service.service.CostService;
 import com.kodilla.car_service.service.RepairService;
 import com.kodilla.car_service.service.ServiceTechnicianService;
 import com.kodilla.car_service.trello.client.TrelloClient;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,25 +24,18 @@ import java.util.stream.Collectors;
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/v1")
+@RequiredArgsConstructor
 public class RepairController {
 
-    @Autowired
-    private RepairMapper repairMapper;
+    private final RepairMapper repairMapper;
 
-    @Autowired
-    private RepairService repairService;
+    private final RepairService repairService;
 
-    @Autowired
-    private TrelloClient trelloClient;
+    private final TrelloClient trelloClient;
 
-    @Autowired
-    private CostService costService;
+    private final CostService costService;
 
-    @Autowired
-    private CostMapper costMapper;
-
-    @Autowired
-    private ServiceTechnicianService serviceTechnicianService;
+    private final ServiceTechnicianService serviceTechnicianService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/repairs")
     public List<RepairDto> getRepairs() {
@@ -68,7 +59,7 @@ public class RepairController {
         String vin = repair.getCar().getVin();
         List<String> cardIdList = trelloClient.getCardDataList().stream()
                 .filter(c -> c.getName().equals(vin))
-                .map(c -> c.getId())
+                .map(TrelloCardDto::getId)
                 .collect(Collectors.toList());
         String cardId = cardIdList.get(0);
         trelloClient.updateCardAfterStartRepair(cardId, email, repairDto);
@@ -92,7 +83,7 @@ public class RepairController {
         String vin = repair.getCar().getVin();
         List<String> cardIdList = trelloClient.getCardDataList().stream()
                 .filter(c -> c.getName().equals(vin))
-                .map(c -> c.getId())
+                .map(TrelloCardDto::getId)
                 .collect(Collectors.toList());
         String cardId = cardIdList.get(0);
         trelloClient.updateCardAfterEndRepair(cardId, email, repairDto);

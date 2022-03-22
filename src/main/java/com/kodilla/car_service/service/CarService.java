@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,11 @@ public class CarService {
         return carRepository.findAll();
     }
 
-    public Car findCarByVin(String vin) {
-        return carRepository.findByVin(vin);
+    public Optional<Car> getCar(final String vin) {
+        return carRepository.findById(vin);
     }
+
+   public void saveCar(final Car car) {
+       carRepository.save(car);
+   }
 }

@@ -1,13 +1,8 @@
 package com.kodilla.car_service.dto;
 
-import com.kodilla.car_service.domain.Client;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 public class CarDto {
 
     private String vin;
@@ -20,6 +15,15 @@ public class CarDto {
 
     private String engine;
 
-    private Client client;
+    private String client;
+
+    public CarDto(final String vin, final String make, final String model, final int year, final String engine, final String client) {
+        this.vin = vin;
+        this.make = make;
+        this.model = model;
+        this.year = year;
+        this.engine = engine;
+        this.client = client;
+    }
 }
 

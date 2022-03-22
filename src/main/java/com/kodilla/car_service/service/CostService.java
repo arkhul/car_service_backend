@@ -1,6 +1,5 @@
 package com.kodilla.car_service.service;
 
-import com.kodilla.car_service.domain.Client;
 import com.kodilla.car_service.domain.Cost;
 import com.kodilla.car_service.repository.CostRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +22,7 @@ public class CostService {
         return costRepository.findByTotalCost(totalCost);
     }
 
-    public Cost saveCost(final Cost cost) {
-        return costRepository.save(cost);
+    public void saveCost(final Cost cost) {
+        costRepository.save(cost);
     }
 }

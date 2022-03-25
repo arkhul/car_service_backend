@@ -1,4 +1,4 @@
-package com.kodilla.car_service.repairStatus;
+package com.kodilla.car_service.repairFasade;
 
 public enum RepairStatus {
 

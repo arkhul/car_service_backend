@@ -7,7 +7,9 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class CreditChecking {
 
-    private String message;
+    private Message message;
+
+    private Data data;
 }

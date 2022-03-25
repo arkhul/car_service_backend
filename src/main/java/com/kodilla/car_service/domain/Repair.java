@@ -1,6 +1,6 @@
 package com.kodilla.car_service.domain;
 
-import com.kodilla.car_service.repairStatus.RepairStatus;
+import com.kodilla.car_service.repairFasade.RepairStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

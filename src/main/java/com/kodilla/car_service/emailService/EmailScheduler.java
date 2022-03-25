@@ -1,10 +1,9 @@
-package com.kodilla.car_service.scheduler;
+package com.kodilla.car_service.emailService;
 
 import com.kodilla.car_service.domain.Mail;
 import com.kodilla.car_service.domain.Repair;
-import com.kodilla.car_service.repairStatus.RepairStatus;
+import com.kodilla.car_service.repairFasade.RepairStatus;
 import com.kodilla.car_service.service.RepairService;
-import com.kodilla.car_service.trello.service.SimpleEmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -40,7 +39,7 @@ public class EmailScheduler {
         return "Report of day: " + LocalDate.now() + "\n" +
                 "Number of new cars accepted for service: " +
                 repairService.getRepairs().stream()
-                        .map(r -> r.getAdmissionDate())
+                        .map(Repair::getAdmissionDate)
                         .filter(r -> r.equals(LocalDate.now()))
                         .count() + ".\n" +
                 "Number of cars in the process of repair: " +
@@ -50,7 +49,7 @@ public class EmailScheduler {
                         .count() + ".\n" +
                 "Number of cars whose repairs have been completed: " +
                 repairService.getRepairs().stream()
-                        .map(r -> r.getAdmissionDate())
+                        .map(Repair::getAdmissionDate)
                         .filter(r -> r.equals(LocalDate.now()))
                         .count() + ".\n";
     }

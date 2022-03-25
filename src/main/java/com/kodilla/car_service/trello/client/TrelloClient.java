@@ -4,7 +4,7 @@ import com.kodilla.car_service.domain.Mail;
 import com.kodilla.car_service.dto.RepairDto;
 import com.kodilla.car_service.dto.TrelloCardDto;
 import com.kodilla.car_service.trello.config.TrelloConfig;
-import com.kodilla.car_service.trello.service.SimpleEmailService;
+import com.kodilla.car_service.emailService.SimpleEmailService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class TrelloClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
 
-    public TrelloCardDto createCard(RepairDto repairDto) {
+    public void createCard(RepairDto repairDto) {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
@@ -39,22 +39,10 @@ public class TrelloClient {
                 .build()
                 .encode()
                 .toUri();
-        return restTemplate.postForObject(url, null, TrelloCardDto.class);
+        restTemplate.postForObject(url, null, TrelloCardDto.class);
     }
 
-    public void updateCardAfterStartRepair(String cardId, String email, RepairDto repairDto) {
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
-                "/cards/" + cardId)
-                .queryParam("key", trelloConfig.getTrelloAppKey())
-                .queryParam("token", trelloConfig.getTrelloToken())
-                .queryParam("name", repairDto.getCar())
-                .queryParam("desc", repairDto.getDamageDescription())
-                .queryParam("pos", "top")
-                .queryParam("idList", "622f326c008ba782dae6c146")
-                .queryParam("id", cardId)
-                .build()
-                .encode()
-                .toUri();
+    public void updateTheCardAfterRepairStatusChanges(String cardId, String email, RepairDto repairDto) {
         simpleEmailService.sendMail(
                 new Mail(
                         email,
@@ -63,33 +51,34 @@ public class TrelloClient {
                                 "we changed the repair status of your car (vin: " +
                                 repairDto.getCar() + "). The current status is: " +
                                 repairDto.getRepairStatus() + ". Best regards."
+
                 ));
-        restTemplate.put(url, null);
+        LOGGER.info("Mail text: The current status is: " + repairDto.getRepairStatus());
+        restTemplate.put(getUrl(cardId, repairDto), null);
     }
 
-    public void updateCardAfterEndRepair(String cardId, String email, RepairDto repairDto) {
-        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
+    public URI getUrl(String cardId, RepairDto repairDto) {
+        String repairStatus = repairDto.getRepairStatus();
+        String idList;
+        if (repairStatus.equals("IN_PROGRESS")) {
+            idList = "622f326c008ba782dae6c146";
+            LOGGER.info("Change status to IN_PROGRESS");
+        } else {
+            idList = "622f3270e0d1a952c91794ae";
+            LOGGER.info("Change status to DONE");
+        }
+        return UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
                 "/cards/" + cardId)
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .queryParam("name", repairDto.getCar())
                 .queryParam("desc", repairDto.getDamageDescription())
                 .queryParam("pos", "top")
-                .queryParam("idList", "622f3270e0d1a952c91794ae")
+                .queryParam("idList", idList)
                 .queryParam("id", cardId)
                 .build()
                 .encode()
                 .toUri();
-        simpleEmailService.sendMail(
-                new Mail(
-                        email,
-                        "Repair status changed",
-                        "Dear customer, " +
-                                "we changed the repair status of your car (vin: " +
-                                repairDto.getCar() + "). The current status is: " +
-                                repairDto.getRepairStatus() + ". Best regards."
-                ));
-        restTemplate.put(url, null);
     }
 
     public List<TrelloCardDto> getCardDataList() {

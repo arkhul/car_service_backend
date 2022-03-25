@@ -1,6 +1,7 @@
 package com.kodilla.car_service.controller;
 
 import com.kodilla.car_service.carMd.client.CarMdClient;
+import com.kodilla.car_service.carMd.client.CarMdFacade;
 import com.kodilla.car_service.dto.CarDto;
 import com.kodilla.car_service.exception.CarNotFoundException;
 import com.kodilla.car_service.mapper.CarMapper;
@@ -20,6 +21,8 @@ public class CarController {
     private final CarMapper carMapper;
 
     private final CarService carService;
+
+    private final CarMdFacade carMdFacade;
 
     private final CarMdClient carMdClient;
 
@@ -46,8 +49,13 @@ public class CarController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{phoneNumber}")
     public void createCarWithGivenDataFromCarMd(@PathVariable Long phoneNumber) {
-        CarDto carDto = carMdClient.getCarDto();
+        CarDto carDto = carMdFacade.getCarDto();
         carDto.setClient(String.valueOf(phoneNumber));
         carService.saveCar(carMapper.mapToCar(carDto));
+    }
+
+    @RequestMapping(method = RequestMethod.PUT, value = "/cars")
+    public CarDto updateCar(@RequestBody CarDto carDto) {
+        return carMapper.mapToCarDto(carService.saveCar(carMapper.mapToCar(carDto)));
     }
 }

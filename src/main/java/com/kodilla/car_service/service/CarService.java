@@ -22,7 +22,7 @@ public class CarService {
         return carRepository.findById(vin);
     }
 
-   public void saveCar(final Car car) {
-       carRepository.save(car);
+   public Car saveCar(final Car car) {
+       return carRepository.save(car);
    }
 }

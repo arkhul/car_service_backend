@@ -1,6 +1,7 @@
 package com.kodilla.car_service.trello.service;
 
 import com.kodilla.car_service.domain.Mail;
+import com.kodilla.car_service.emailService.SimpleEmailService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

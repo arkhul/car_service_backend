@@ -1,8 +1,10 @@
 package com.kodilla.car_service.dto;
 
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Setter
+@Getter
+@NoArgsConstructor
 public class CarDto {
 
     private String vin;
@@ -26,4 +28,3 @@ public class CarDto {
         this.client = client;
     }
 }
-

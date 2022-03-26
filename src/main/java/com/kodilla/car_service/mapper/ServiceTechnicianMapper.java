@@ -14,7 +14,8 @@ public class ServiceTechnicianMapper {
         return new ServiceTechnician(
                 serviceTechnicianDto.getId(),
                 serviceTechnicianDto.getName(),
-                serviceTechnicianDto.getManHourRate()
+                serviceTechnicianDto.getManHourRate(),
+                serviceTechnicianDto.getPhoneNumber()
         );
     }
 
@@ -22,7 +23,8 @@ public class ServiceTechnicianMapper {
         return new ServiceTechnicianDto(
                 serviceTechnician.getId(),
                 serviceTechnician.getName(),
-                serviceTechnician.getManHourRate()
+                serviceTechnician.getManHourRate(),
+                serviceTechnician.getPhoneNumber()
         );
     }
 

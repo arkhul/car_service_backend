@@ -1,4 +1,4 @@
-package com.kodilla.car_service.repairFasade;
+package com.kodilla.car_service.repair;
 
 import com.kodilla.car_service.domain.Cost;
 import com.kodilla.car_service.domain.Repair;

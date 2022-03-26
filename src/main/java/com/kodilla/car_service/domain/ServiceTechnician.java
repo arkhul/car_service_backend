@@ -27,6 +27,9 @@ public class ServiceTechnician {
     @NotNull
     private BigDecimal manHourRate;
 
+    @NotNull
+    private Long phoneNumber;
+
     @OneToMany(
             targetEntity = Repair.class,
             mappedBy = "serviceTechnician",
@@ -35,9 +38,10 @@ public class ServiceTechnician {
     )
     private List<Repair> repairList = new ArrayList<>();
 
-    public ServiceTechnician(Long id, String name, BigDecimal manHourRate) {
+    public ServiceTechnician(final Long id, final String name, final BigDecimal manHourRate, final Long phoneNumber) {
         this.id = id;
         this.name = name;
         this.manHourRate = manHourRate;
+        this.phoneNumber = phoneNumber;
     }
 }

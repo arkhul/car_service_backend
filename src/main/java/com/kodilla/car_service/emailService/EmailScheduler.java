@@ -2,7 +2,7 @@ package com.kodilla.car_service.emailService;
 
 import com.kodilla.car_service.domain.Mail;
 import com.kodilla.car_service.domain.Repair;
-import com.kodilla.car_service.repairFasade.RepairStatus;
+import com.kodilla.car_service.repair.RepairStatus;
 import com.kodilla.car_service.service.RepairService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;

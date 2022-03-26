@@ -3,7 +3,8 @@ package com.kodilla.car_service.controller;
 import com.kodilla.car_service.dto.RepairDto;
 import com.kodilla.car_service.exception.RepairNotFoundException;
 import com.kodilla.car_service.mapper.RepairMapper;
-import com.kodilla.car_service.repairFasade.RepairFasade;
+import com.kodilla.car_service.observer.MessageForServiceTechnician;
+import com.kodilla.car_service.repair.RepairFasade;
 import com.kodilla.car_service.service.RepairService;
 import com.kodilla.car_service.trello.client.TrelloClient;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class RepairController {
 
     private final RepairFasade repairFasade;
 
+    private final MessageForServiceTechnician messageForServiceTechnician;
+
     @RequestMapping(method = RequestMethod.GET, value = "/repairs")
     public List<RepairDto> getRepairs() {
         return repairMapper.mapToRepairDtoList(repairService.getRepairs());
@@ -36,6 +39,7 @@ public class RepairController {
     public void createRepair(@RequestBody RepairDto repairDto) {
         repairService.saveRepair(repairMapper.mapToRepair(repairDto));
         trelloClient.createCard(repairDto);
+        messageForServiceTechnician.notifyAllObservers(repairMapper.mapToRepair(repairDto));
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/repairs/start/{repairId}/{technicianName}")

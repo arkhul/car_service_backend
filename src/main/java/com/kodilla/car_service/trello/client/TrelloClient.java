@@ -1,10 +1,11 @@
 package com.kodilla.car_service.trello.client;
 
 import com.kodilla.car_service.domain.Mail;
+import com.kodilla.car_service.dto.CreatedTrelloCardDto;
 import com.kodilla.car_service.dto.RepairDto;
 import com.kodilla.car_service.dto.TrelloCardDto;
-import com.kodilla.car_service.trello.config.TrelloConfig;
 import com.kodilla.car_service.emailService.SimpleEmailService;
+import com.kodilla.car_service.trello.config.TrelloConfig;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public class TrelloClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
 
-    public void createCard(RepairDto repairDto) {
+    public CreatedTrelloCardDto createCard(RepairDto repairDto) {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards")
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
@@ -39,7 +40,7 @@ public class TrelloClient {
                 .build()
                 .encode()
                 .toUri();
-        restTemplate.postForObject(url, null, TrelloCardDto.class);
+        return restTemplate.postForObject(url, null, CreatedTrelloCardDto.class);
     }
 
     public void updateTheCardAfterRepairStatusChanges(String cardId, String email, RepairDto repairDto) {

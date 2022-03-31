@@ -2,11 +2,13 @@ package com.kodilla.car_service.observer;
 
 import com.kodilla.car_service.domain.Repair;
 
+import java.util.List;
+
 public interface Observable {
 
     void notifyAllObservers(Repair repair);
 
-    void addObserver(Observer observer);
+    List<Observer> addObserver(Observer observer);
 
-    void removeObserver(Observer observer);
+    List<Observer> removeObserver(Observer observer);
 }

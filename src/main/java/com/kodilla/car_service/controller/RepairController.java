@@ -1,5 +1,6 @@
 package com.kodilla.car_service.controller;
 
+import com.kodilla.car_service.dto.CreatedTrelloCardDto;
 import com.kodilla.car_service.dto.RepairDto;
 import com.kodilla.car_service.exception.RepairNotFoundException;
 import com.kodilla.car_service.mapper.RepairMapper;
@@ -36,10 +37,10 @@ public class RepairController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/repairs", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createRepair(@RequestBody RepairDto repairDto) {
+    public CreatedTrelloCardDto createRepair(@RequestBody RepairDto repairDto) {
         repairService.saveRepair(repairMapper.mapToRepair(repairDto));
-        trelloClient.createCard(repairDto);
         messageForServiceTechnician.notifyAllObservers(repairMapper.mapToRepair(repairDto));
+        return trelloClient.createCard(repairDto);
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/repairs/start/{repairId}/{technicianName}")

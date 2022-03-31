@@ -2,7 +2,9 @@ package com.kodilla.car_service.controller;
 
 import com.kodilla.car_service.carMd.client.CarMdClient;
 import com.kodilla.car_service.carMd.client.CarMdFacade;
+import com.kodilla.car_service.domain.Car;
 import com.kodilla.car_service.dto.CarDto;
+import com.kodilla.car_service.exception.CarFoundInDatabaseException;
 import com.kodilla.car_service.exception.CarNotFoundException;
 import com.kodilla.car_service.mapper.CarMapper;
 import com.kodilla.car_service.service.CarService;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -43,8 +46,15 @@ public class CarController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createNewCar(@RequestBody CarDto carDto) {
-        carService.saveCar(carMapper.mapToCar(carDto));
+    public Car createNewCar(@RequestBody CarDto carDto) throws CarFoundInDatabaseException {
+        List<String> vin = carService.getCars().stream()
+                .map(Car::getVin)
+                .collect(Collectors.toList());
+        if (vin.contains(carDto.getVin())) {
+            throw new CarFoundInDatabaseException();
+        } else {
+            return carService.saveCar(carMapper.mapToCar(carDto));
+        }
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{phoneNumber}")

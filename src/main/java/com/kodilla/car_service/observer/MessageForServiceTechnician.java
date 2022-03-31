@@ -21,12 +21,14 @@ public class MessageForServiceTechnician implements Observable {
     }
 
     @Override
-    public void addObserver(final Observer observer) {
+    public List<Observer> addObserver(final Observer observer) {
         observers.add(observer);
+        return observers;
     }
 
     @Override
-    public void removeObserver(final Observer observer) {
+    public List<Observer> removeObserver(final Observer observer) {
         observers.remove(observer);
+        return observers;
     }
 }

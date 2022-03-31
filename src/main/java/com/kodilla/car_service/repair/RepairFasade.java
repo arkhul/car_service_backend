@@ -44,8 +44,8 @@ public class RepairFasade {
 
     public Repair endRepair(Long repairId, String repairDesc, BigDecimal repairTime, BigDecimal partsCost) throws RepairNotFoundException {
         Repair repair = repairService.getRepair(repairId).orElseThrow(RepairNotFoundException::new);
-        BigDecimal labour_cost = repair.getServiceTechnician().getManHourRate().multiply(repairTime);
-        Cost cost = new Cost(partsCost, labour_cost, partsCost.add(labour_cost));
+        BigDecimal labourCost = repair.getServiceTechnician().getManHourRate().multiply(repairTime);
+        Cost cost = new Cost(partsCost, labourCost, partsCost.add(labourCost));
         costService.saveCost(cost);
         repair.setRepairStatus(RepairStatus.DONE);
         repair.setReleaseDate(LocalDate.now());

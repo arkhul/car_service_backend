@@ -8,8 +8,8 @@ public class SmsService {
 
     // implementation to do in the future
 
-    public void sendASms(Repair repair) {
-        System.out.println("New car in service: " + repair.getCar().getMake() + " " + repair.getCar().getModel() + " " +
-                repair.getCar().getYear() + " " + repair.getDamageDescription());
+    public String sendASms(Repair repair) {
+        return "New car in service: " + repair.getCar().getMake() + " " + repair.getCar().getModel() + " " +
+                repair.getCar().getYear() + " " + repair.getDamageDescription();
     }
 }

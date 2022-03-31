@@ -31,4 +31,8 @@ public class RepairDto {
     private String serviceTechnician;
 
     private BigDecimal cost;
+
+    public void setRepairStatus(final String repairStatus) {
+        this.repairStatus = repairStatus;
+    }
 }

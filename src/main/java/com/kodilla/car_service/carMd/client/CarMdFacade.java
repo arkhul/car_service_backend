@@ -20,7 +20,7 @@ public class CarMdFacade {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CarMdFacade.class);
 
-    private static int quantityOfCredits = 1;
+    public static int quantityOfCredits = 1;
 
     private final CarMdConfig carMdConfig;
 

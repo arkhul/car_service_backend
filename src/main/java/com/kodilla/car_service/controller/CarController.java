@@ -58,10 +58,10 @@ public class CarController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{phoneNumber}")
-    public void createCarWithGivenDataFromCarMd(@PathVariable Long phoneNumber) {
+    public Car createCarWithGivenDataFromCarMd(@PathVariable Long phoneNumber) {
         CarDto carDto = carMdFacade.getCarDto();
         carDto.setClient(String.valueOf(phoneNumber));
-        carService.saveCar(carMapper.mapToCar(carDto));
+        return carService.saveCar(carMapper.mapToCar(carDto));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars")

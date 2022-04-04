@@ -1,5 +1,6 @@
 package com.kodilla.car_service.controller;
 
+import com.kodilla.car_service.domain.ServiceTechnician;
 import com.kodilla.car_service.dto.ServiceTechnicianDto;
 import com.kodilla.car_service.exception.ServiceTechnicianNotFoundException;
 import com.kodilla.car_service.mapper.ServiceTechnicianMapper;
@@ -36,9 +37,10 @@ public class ServiceTechnicianController {
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/technicians", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void createServiceTechnician(@RequestBody ServiceTechnicianDto serviceTechnicianDto) {
+    public ServiceTechnician createServiceTechnician(@RequestBody ServiceTechnicianDto serviceTechnicianDto) {
         messageForServiceTechnician.addObserver(serviceTechnicianDto);
-        serviceTechnicianService.saveServiceTechnician(serviceTechnicianMapper.mapToServiceTechnician(serviceTechnicianDto));
+        return serviceTechnicianService.saveServiceTechnician(serviceTechnicianMapper.
+                mapToServiceTechnician(serviceTechnicianDto));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/technicians")

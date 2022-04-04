@@ -29,14 +29,14 @@ class CarMdFacadeTest {
     void getUrlTest() {
         // Given
         String vin = "VIN123";
-        when(carMdConfig.getCarMdEndpoint()).thenReturn("http://test.com");
+        when(carMdConfig.getCarMdEndpoint()).thenReturn("https://test.com");
 
         // When
         URI url = carMdFacade.getUrl(vin);
 
         // Then
         assertEquals(0, CarMdFacade.quantityOfCredits);
-        assertEquals("http://test.com/decode?vin=VIN123", url.toString());
+        assertEquals("https://test.com/decode?vin=VIN123", url.toString());
     }
 
     @Test

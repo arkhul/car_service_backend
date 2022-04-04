@@ -9,6 +9,7 @@ import org.springframework.mail.SimpleMailMessage;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 class SimpleEmailServiceTest {
 

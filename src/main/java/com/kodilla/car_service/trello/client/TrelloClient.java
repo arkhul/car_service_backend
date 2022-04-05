@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,6 +29,26 @@ public class TrelloClient {
     private final TrelloConfig trelloConfig;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TrelloClient.class);
+
+    public List<TrelloCardDto> getCardsFromTrelloToDoList() {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
+                "/lists/622f32652b798678df8eaa84/cards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .queryParam("fields", "name,desc")
+                .build()
+                .encode()
+                .toUri();
+        try {
+            TrelloCardDto[] cardsResponse = restTemplate.getForObject(url, TrelloCardDto[].class);
+            return new ArrayList<>(Optional.ofNullable(cardsResponse)
+                    .map(Arrays::asList)
+                    .orElse(Collections.emptyList()));
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Collections.emptyList();
+        }
+    }
 
     public CreatedTrelloCardDto createCard(RepairDto repairDto) {
         URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() + "/cards")
@@ -73,7 +94,7 @@ public class TrelloClient {
                 .queryParam("key", trelloConfig.getTrelloAppKey())
                 .queryParam("token", trelloConfig.getTrelloToken())
                 .queryParam("name", repairDto.getCar())
-                .queryParam("desc", repairDto.getDamageDescription())
+                .queryParam("desc", repairDto.getDamageDescription() + " " + repairDto.getServiceTechnician())
                 .queryParam("pos", "top")
                 .queryParam("idList", idList)
                 .queryParam("id", cardId)
@@ -96,9 +117,28 @@ public class TrelloClient {
                 .map(Arrays::asList)
                 .orElse(Collections.emptyList())
                 .stream()
-                .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName())
-                        && Objects.nonNull(p.getDesc()) && Objects.nonNull(p.getIdList())
-                        && Objects.nonNull(p.getPos()))
+                .filter(p -> Objects.nonNull(p.getId()) && Objects.nonNull(p.getName()) &&
+                        Objects.nonNull(p.getDesc()))
                 .collect(Collectors.toList());
+    }
+
+    public List<TrelloCardDto> getCardsFromTrelloInProgressList() {
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint() +
+                "/lists/622f326c008ba782dae6c146/cards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .queryParam("fields", "name,desc")
+                .build()
+                .encode()
+                .toUri();
+        try {
+            TrelloCardDto[] cardsResponse = restTemplate.getForObject(url, TrelloCardDto[].class);
+            return new ArrayList<>(Optional.ofNullable(cardsResponse)
+                    .map(Arrays::asList)
+                    .orElse(Collections.emptyList()));
+        } catch (RestClientException e) {
+            LOGGER.error(e.getMessage(), e);
+            return Collections.emptyList();
+        }
     }
 }

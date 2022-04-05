@@ -97,7 +97,7 @@ class TrelloClientTest {
         // Then
         URI expected = new URI("https://test.com/cards/" + cardId + "?key=test&token=test" +
                 "&name=" + repairDto().getCar() +
-                "&desc=" + repairDto().getDamageDescription() +
+                "&desc=" + repairDto().getDamageDescription() + "%20" + repairDto().getServiceTechnician() +
                 "&pos=top&idList=" + idList +
                 "&id=" + cardId);
         assertThat(uri).isEqualTo(expected);
@@ -118,7 +118,7 @@ class TrelloClientTest {
         // Then
         URI expected = new URI("https://test.com/cards/" + cardId + "?key=test&token=test" +
                 "&name=" + repairDto().getCar() +
-                "&desc=" + repairDto().getDamageDescription() +
+                "&desc=" + repairDto().getDamageDescription() + "%20" + repairDto().getServiceTechnician() +
                 "&pos=top&idList=" + idList +
                 "&id=" + cardId);
         assertThat(uri).isEqualTo(expected);

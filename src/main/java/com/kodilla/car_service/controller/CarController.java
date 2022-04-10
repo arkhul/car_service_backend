@@ -45,23 +45,25 @@ public class CarController {
         return carMdClient.findCarByVinInCarMd(vin).orElseThrow(CarNotFoundException::new);
     }
 
+    // for testing, we change from void to Car
     @RequestMapping(method = RequestMethod.POST, value = "/cars", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Car createNewCar(@RequestBody CarDto carDto) throws CarFoundInDatabaseException {
+    public void createNewCar(@RequestBody CarDto carDto) throws CarFoundInDatabaseException {
         List<String> vin = carService.getCars().stream()
                 .map(Car::getVin)
                 .collect(Collectors.toList());
         if (vin.contains(carDto.getVin())) {
             throw new CarFoundInDatabaseException();
         } else {
-            return carService.saveCar(carMapper.mapToCar(carDto));
+            carService.saveCar(carMapper.mapToCar(carDto));
         }
     }
 
+    // for testing, we change from void to Car
     @RequestMapping(method = RequestMethod.POST, value = "/cars/{phoneNumber}")
-    public Car createCarWithGivenDataFromCarMd(@PathVariable Long phoneNumber) {
+    public void createCarWithGivenDataFromCarMd(@PathVariable Long phoneNumber) {
         CarDto carDto = carMdFacade.getCarDto();
         carDto.setClient(String.valueOf(phoneNumber));
-        return carService.saveCar(carMapper.mapToCar(carDto));
+        carService.saveCar(carMapper.mapToCar(carDto));
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/cars")
